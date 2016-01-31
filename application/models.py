@@ -30,9 +30,12 @@ class Student(Base):
         return '<Student %r>' % (self.username)
 
     def gravatar(self):
-        em = self.email.strip().lower()
+        if self.email == None:
+            email = ""
+        else:
+            email = self.email.strip().lower()
         h = hashlib.md5()
-        h.update(em)
+        h.update(email)
         return "http://www.gravatar.com/avatar/"+h.hexdigest()+"?s=200&d=retro&r=g"
 
 class Course(Base):
