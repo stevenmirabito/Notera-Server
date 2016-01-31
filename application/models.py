@@ -36,7 +36,7 @@ class Student(Base):
             email = self.email.strip().lower()
         h = hashlib.md5()
         h.update(email)
-        return "http://www.gravatar.com/avatar/"+h.hexdigest()+"?s=200&d=retro&r=g"
+        return "https://www.gravatar.com/avatar/"+h.hexdigest()+"?s=200&d=retro&r=g"
 
 class Course(Base):
     __tablename__ = 'courses'
