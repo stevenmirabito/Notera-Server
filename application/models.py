@@ -20,7 +20,7 @@ class Student(Base):
         back_populates="students")
 
     def __init__(self, username=None, realname=None):
-        self.username = username
+        self.username = username.lower()
         self.realname = realname
 
     def __repr__(self):
@@ -56,7 +56,7 @@ class Note(Base):
 
     def __init__(self, title=None, body=None):
         self.title = title
-        self.username = body
+        self.body = body
 
     def __repr__(self):
         return '<Note %r>' % (self.title)
