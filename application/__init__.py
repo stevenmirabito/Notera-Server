@@ -10,7 +10,7 @@ app = Flask(__name__)
 def hello():
     return "<h1 style='color:red'>Hello There!</h1>"
 
-@app.route("/api/feed/<uname>")
+@app.route("/feed/<uname>")
 def feed_route(uname):
     try:
         student = models.Student.query.filter_by(username=uname).first()
@@ -25,7 +25,7 @@ def feed_route(uname):
 
 ### Student Routes
 
-@app.route("/api/student/new", methods=['POST'])
+@app.route("/student/new", methods=['POST'])
 def new_student_route():
     data = request.get_json(force=True)
     try:
@@ -39,14 +39,14 @@ def new_student_route():
         response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/students")
+@app.route("/students")
 def students_route():
     response = []
     for student in models.Student.query.all():
         response.append(row2dict(student))
     return jsonify(response)
 
-@app.route("/api/student/<uname>", methods=['GET','POST'])
+@app.route("/student/<uname>", methods=['GET','POST'])
 def student_route(uname):
     if(request.method == 'POST'):
         try:
@@ -69,7 +69,7 @@ def student_route(uname):
             response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/student/<uname>/courses")
+@app.route("/student/<uname>/courses")
 def student_courses_route(uname):
     try:
         student = models.Student.query.filter_by(username=uname).first()
@@ -81,7 +81,7 @@ def student_courses_route(uname):
         response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/student/<uname>/notes")
+@app.route("/student/<uname>/notes")
 def student_notes_route(uname):
     try:
         student = models.Student.query.filter_by(username=uname).first()
@@ -95,7 +95,7 @@ def student_notes_route(uname):
 
 ### Course routes
 
-@app.route("/api/course/new", methods=['POST'])
+@app.route("/course/new", methods=['POST'])
 def new_course_route():
     data = request.get_json(force=True)
     try:
@@ -109,14 +109,14 @@ def new_course_route():
         response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/courses")
+@app.route("/courses")
 def courses_route():
     response = []
     for course in models.Course.query.all():
         response.append(row2dict(course))
     return jsonify(response)
 
-@app.route("/api/course/<int:cid>", methods=['GET','POST'])
+@app.route("/course/<int:cid>", methods=['GET','POST'])
 def course_route(cid):
     if(request.method == 'POST'):
         try:
@@ -139,7 +139,7 @@ def course_route(cid):
             response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/course/<int:cid>/notes")
+@app.route("/course/<int:cid>/notes")
 def course_notes_route(cid):
     try:
         course = models.Course.query.filter_by(id=cid).first()
@@ -151,7 +151,7 @@ def course_notes_route(cid):
         response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/course/<int:cid>/students")
+@app.route("/course/<int:cid>/students")
 def course_students_route(cid):
     try:
         course = models.Course.query.filter_by(id=cid).first()
@@ -163,7 +163,7 @@ def course_students_route(cid):
         response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/course/<int:cid>/students/add/<uname>")
+@app.route("/course/<int:cid>/students/add/<uname>")
 def course_addstudent_route(cid, uname):
     try:
         course = models.Course.query.filter_by(id=cid).first()
@@ -181,7 +181,7 @@ def course_addstudent_route(cid, uname):
 
 ### Note Routes
 
-@app.route("/api/note/new", methods=['POST'])
+@app.route("/note/new", methods=['POST'])
 def new_note_route():
     data = request.get_json(force=True)
     try:
@@ -201,14 +201,14 @@ def new_note_route():
         response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/notes")
+@app.route("/notes")
 def notes_route():
     response = []
     for note in models.Note.query.all():
         response.append(row2dict(note))
     return jsonify(response)
 
-@app.route("/api/note/<int:nid>", methods=['GET','POST'])
+@app.route("/note/<int:nid>", methods=['GET','POST'])
 def note_route(nid):
     if(request.method == 'POST'):
         try:
@@ -231,7 +231,7 @@ def note_route(nid):
             response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/note/<int:nid>/student")
+@app.route("/note/<int:nid>/student")
 def note_student_route(nid):
     try:
         student = models.Note.query.filter_by(id=nid).first().student
@@ -241,7 +241,7 @@ def note_student_route(nid):
         response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/note/<int:nid>/course")
+@app.route("/note/<int:nid>/course")
 def note_course_route(nid):
     try:
         course = models.Note.query.filter_by(id=nid).first().course
