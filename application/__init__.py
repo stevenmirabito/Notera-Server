@@ -15,6 +15,20 @@ def hello():
 def feed_route(uname):
     return jsonify({"msg":"Not Implemented","username":uname})
 
+@app.route("/api/student/new", methods=['POST'])
+def new_student_route():
+    data = request.get_json(force=True)
+    try:
+        student = models.Student(data["username"], data["realname"])
+        db.add(student)
+        db.commit()
+        response = row2dict(student)
+        response["msg"] = "Success"
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
+
 @app.route("/api/student/<uname>/")
 def student_route(uname):
     try:
