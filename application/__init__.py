@@ -1,5 +1,4 @@
 from flask import Flask, request
-import json
 from json import dumps as jsonify
 from application.database import session as db
 from application.util import row2dict
@@ -40,7 +39,14 @@ def new_student_route():
         response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/student/<uname>/")
+@app.route("/api/students")
+def students_route():
+    response = []
+    for student in models.Student.query.all():
+        response.append(row2dict(student))
+    return jsonify(response)
+
+@app.route("/api/student/<uname>")
 def student_route(uname):
     try:
         student = models.Student.query.filter_by(username=uname).first()
@@ -90,7 +96,14 @@ def new_course_route():
         response["msg"] = e.message
     return jsonify(response)
 
-@app.route("/api/course/<int:cid>/")
+@app.route("/api/courses")
+def courses_route():
+    response = []
+    for course in models.Course.query.all():
+        response.append(row2dict(course))
+    return jsonify(response)
+
+@app.route("/api/course/<int:cid>")
 def course_route(cid):
     try:
         course = models.Course.query.filter_by(id=cid).first()
@@ -162,8 +175,14 @@ def new_note_route():
         response["msg"] = e.message
     return jsonify(response)
 
+@app.route("/api/notes")
+def notes_route():
+    response = []
+    for note in models.Note.query.all():
+        response.append(row2dict(note))
+    return jsonify(response)
 
-@app.route("/api/note/<int:nid>/")
+@app.route("/api/note/<int:nid>")
 def note_route(nid):
     try:
         note = models.Note.query.filter_by(id=nid).first()
