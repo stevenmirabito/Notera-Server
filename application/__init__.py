@@ -46,14 +46,27 @@ def students_route():
         response.append(row2dict(student))
     return jsonify(response)
 
-@app.route("/api/student/<uname>")
+@app.route("/api/student/<uname>", methods=['GET','POST'])
 def student_route(uname):
-    try:
-        student = models.Student.query.filter_by(username=uname).first()
-        response = row2dict(student)
-    except Exception as e:
-        response = dict()
-        response["msg"] = e.message
+    if(request.method == 'POST'):
+        try:
+            data = request.get_json(force=True)
+            student = models.Student.query.filter_by(username=uname).first()
+            for k in data:
+                student.__setattr__(k, data[k])
+            db.add(student)
+            db.commit()
+            response = row2dict(student)
+        except Exception as e:
+            response = dict()
+            response["msg"] = e.message
+    else:
+        try:
+            student = models.Student.query.filter_by(username=uname).first()
+            response = row2dict(student)
+        except Exception as e:
+            response = dict()
+            response["msg"] = e.message
     return jsonify(response)
 
 @app.route("/api/student/<uname>/courses")
@@ -103,14 +116,27 @@ def courses_route():
         response.append(row2dict(course))
     return jsonify(response)
 
-@app.route("/api/course/<int:cid>")
+@app.route("/api/course/<int:cid>", methods=['GET','POST'])
 def course_route(cid):
-    try:
-        course = models.Course.query.filter_by(id=cid).first()
-        response = row2dict(course)
-    except Exception as e:
-        response = dict()
-        response["msg"] = e.message
+    if(request.method == 'POST'):
+        try:
+            data = request.get_json(force=True)
+            course = models.Course.query.filter_by(id=cid).first()
+            for k in data:
+                course.__setattr__(k, data[k])
+            db.add(course)
+            db.commit()
+            response = row2dict(course)
+        except Exception as e:
+            response = dict()
+            response["msg"] = e.message
+    else:
+        try:
+            course = models.Course.query.filter_by(id=cid).first()
+            response = row2dict(course)
+        except Exception as e:
+            response = dict()
+            response["msg"] = e.message
     return jsonify(response)
 
 @app.route("/api/course/<int:cid>/notes")
@@ -182,14 +208,27 @@ def notes_route():
         response.append(row2dict(note))
     return jsonify(response)
 
-@app.route("/api/note/<int:nid>")
+@app.route("/api/note/<int:nid>", methods=['GET','POST'])
 def note_route(nid):
-    try:
-        note = models.Note.query.filter_by(id=nid).first()
-        response = row2dict(note)
-    except Exception as e:
-        response = dict()
-        response["msg"] = e.message
+    if(request.method == 'POST'):
+        try:
+            data = request.get_json(force=True)
+            note = models.Note.query.filter_by(id=nid).first()
+            for k in data:
+                note.__setattr__(k, data[k])
+            db.add(note)
+            db.commit()
+            response = row2dict(note)
+        except Exception as e:
+            response = dict()
+            response["msg"] = e.message
+    else:
+        try:
+            note = models.Note.query.filter_by(id=nid).first()
+            response = row2dict(note)
+        except Exception as e:
+            response = dict()
+            response["msg"] = e.message
     return jsonify(response)
 
 @app.route("/api/note/<int:nid>/student")

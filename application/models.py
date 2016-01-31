@@ -29,8 +29,8 @@ class Student(Base):
 class Course(Base):
     __tablename__ = 'courses'
     id = Column(Integer, primary_key=True)
-    coursename = Column(String(120), unique=True)
-    professor = Column(String(120), unique=False)
+    coursename = Column(String(120))
+    professor = Column(String(120))
 
     notes = relationship("Note", backref="course")
     students = relationship(
