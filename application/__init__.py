@@ -1,5 +1,6 @@
 from flask import Flask, request
 from json import dumps as jsonify
+from datetime import datetime as dt
 from application.database import session as db
 from application.util import row2dict
 import application.models as models
@@ -53,6 +54,9 @@ def student_route(uname):
             data = request.get_json(force=True)
             student = models.Student.query.filter_by(username=uname).first()
             for k in data:
+                if k == "username":
+                    student.username = data[k].lower()
+                    continue
                 student.__setattr__(k, data[k])
             db.add(student)
             db.commit()
@@ -64,6 +68,7 @@ def student_route(uname):
         try:
             student = models.Student.query.filter_by(username=uname).first()
             response = row2dict(student)
+            response["gravatar"] = student.gravatar()
         except Exception as e:
             response = dict()
             response["msg"] = e.message
@@ -188,7 +193,10 @@ def course_addstudent_route(cid, uname):
 def new_note_route():
     data = request.get_json(force=True)
     try:
-        note = models.Note(data["title"], data["body"])
+        if hasattr(data, "timestamp"):
+            note = models.Note(data["title"], data["body"], data["timestamp"])
+        else:
+            note = models.Note(data["title"], data["body"])
         student = models.Student.query.filter_by(id=data["student_id"]).first()
         course = models.Course.query.filter_by(id=data["course_id"]).first()
         student.notes.append(note)
@@ -218,6 +226,9 @@ def note_route(nid):
             data = request.get_json(force=True)
             note = models.Note.query.filter_by(id=nid).first()
             for k in data:
+                if k == "timestamp":
+                    note.timestamp = dt.strptime(data["timestamp"],"%Y-%m-%d %H:%M:%S.%f") # ISO 8601
+                    continue
                 note.__setattr__(k, data[k])
             db.add(note)
             db.commit()
