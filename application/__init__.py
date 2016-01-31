@@ -39,7 +39,7 @@ def feed_route(uname):
             for note in course.notes:
                 note_dict = row2dict(note)
                 author = models.Student.query.filter_by(id=note.student_id).first()
-                author_dict = row2dict(student)
+                author_dict = row2dict(author)
                 author_dict["gravatar"] = author.gravatar()
                 note_dict["author"] = author_dict
                 response.append(note_dict)
