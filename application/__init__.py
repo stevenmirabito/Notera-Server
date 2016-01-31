@@ -11,6 +11,24 @@ app = Flask(__name__)
 def hello():
     return "<h1 style='color:red'>Hello There!</h1>"
 
+@app.route("/classmates/<uname>")
+def classmate_route(uname):
+    try:
+        student = models.Student.query.filter_by(username=uname).first()
+        response = []
+        for course in student.courses:
+            for classmate in course.students:
+                if classmate == student:
+                    continue
+                entry = row2dict(classmate)
+                entry["class_id"] = course.id
+                response.append(entry)
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
+
+
 @app.route("/feed/<uname>")
 def feed_route(uname):
     try:
