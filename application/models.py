@@ -32,6 +32,8 @@ class Course(Base):
     coursename = Column(String(120))
     professor = Column(String(120))
 
+    school_id = Column(Integer, ForeignKey('schools.id'))
+
     notes = relationship("Note", backref="course")
     students = relationship(
         "Student",
@@ -57,6 +59,18 @@ class Note(Base):
     def __init__(self, title=None, body=None):
         self.title = title
         self.body = body
-
     def __repr__(self):
         return '<Note %r>' % (self.title)
+
+class School(Base):
+    __tablename__ = 'schools'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(120))
+
+    courses = relationship("Course", backref="school")
+
+    def __init__(self, name=None):
+        self.name = name
+
+    def __repr__(self):
+        return '<School %r>' % (self.name)

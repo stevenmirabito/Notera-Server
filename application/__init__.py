@@ -100,7 +100,10 @@ def new_course_route():
     data = request.get_json(force=True)
     try:
         course = models.Course(data["coursename"], data["professor"])
+        school = models.School.query.filter_by(id=data["school_id"]).first()
+        school.courses.append(course)
         db.add(course)
+        db.add(school)
         db.commit()
         response = row2dict(course)
         response["msg"] = "Success"
@@ -250,6 +253,51 @@ def note_course_route(nid):
         response = dict()
         response["msg"] = e.message
     return jsonify(response)
+
+### School Routes
+
+@app.route("/school/new", methods=['POST'])
+def new_school_route():
+    data = request.get_json(force=True)
+    try:
+        school = models.School(data["name"])
+        db.add(school)
+        db.commit()
+        response = row2dict(school)
+        response["msg"] = "Success"
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
+
+@app.route("/schools")
+def schools_route():
+    response = []
+    for school in models.School.query.all():
+        response.append(row2dict(school))
+    return jsonify(response)
+
+@app.route("/school/<int:sid>")
+def school_route(sid):
+    try:
+        school = models.School.query.filter_by(id=sid).first()
+        response = row2dict(school)
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
+
+@app.route("/school/<int:sid>/courses")
+def school_courses_route(sid):
+    try:
+        response = []
+        for course in models.School.query.filter_by(id=sid).first().courses:
+            response.append(row2dict(course))
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
