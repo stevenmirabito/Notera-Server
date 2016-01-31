@@ -22,6 +22,7 @@ def classmate_route(uname):
                     continue
                 entry = row2dict(classmate)
                 entry["class_id"] = course.id
+		entry["gravatar"] = classmate.gravatar()
                 response.append(entry)
     except Exception as e:
         response = dict()
