@@ -63,7 +63,9 @@ def new_student_route():
 def students_route():
     response = []
     for student in models.Student.query.all():
-        response.append(row2dict(student))
+        student_dict = row2dict(student)
+	student_dict["gravatar"] = student.gravatar()
+	response.append(student_dict)
     return jsonify(response)
 
 @app.route("/student/<uname>", methods=['GET','POST'])
