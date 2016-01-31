@@ -13,7 +13,16 @@ def hello():
 
 @app.route("/api/feed/<uname>")
 def feed_route(uname):
-    return jsonify({"msg":"Not Implemented","username":uname})
+    try:
+        student = models.Student.query.filter_by(username=uname).first()
+        response = []
+        for course in student.courses:
+            for note in course.notes:
+                response.append(row2dict(note))
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
 
 ### Student Routes
 
@@ -126,6 +135,59 @@ def course_addstudent_route(cid, uname):
         db.commit()
         response = dict()
         response["msg"] = "Success"
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
+
+### Note Routes
+
+@app.route("/api/note/new", methods=['POST'])
+def new_note_route():
+    data = request.get_json(force=True)
+    try:
+        note = models.Note(data["title"], data["body"])
+        student = models.Student.query.filter_by(id=data["student_id"]).first()
+        course = models.Course.query.filter_by(id=data["course_id"]).first()
+        student.notes.append(note)
+        course.notes.append(note)
+        db.add(student)
+        db.add(course)
+        db.add(note)
+        db.commit()
+        response = row2dict(note)
+        response["msg"] = "Success"
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
+
+
+@app.route("/api/note/<int:nid>/")
+def note_route(nid):
+    try:
+        note = models.Note.query.filter_by(id=nid).first()
+        response = row2dict(note)
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
+
+@app.route("/api/note/<int:nid>/student")
+def note_student_route(nid):
+    try:
+        student = models.Note.query.filter_by(id=nid).first().student
+        response = row2dict(student)
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
+
+@app.route("/api/note/<int:nid>/course")
+def note_course_route(nid):
+    try:
+        course = models.Note.query.filter_by(id=nid).first().course
+        response = row2dict(course)
     except Exception as e:
         response = dict()
         response["msg"] = e.message
