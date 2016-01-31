@@ -1,3 +1,5 @@
+
+#Credit to Anurag Uniyal on http://stackoverflow.com/questions/1958219/convert-sqlalchemy-row-object-to-python-dict
 def row2dict(row):
     d = {}
     for column in row.__table__.columns:
