@@ -17,23 +17,36 @@ def feed_route(uname):
 
 @app.route("/api/student/<uname>/")
 def student_route(uname):
-    student = models.Student.query.filter_by(username=uname).first()
-    return jsonify(row2dict(student))
+    try:
+        student = models.Student.query.filter_by(username=uname).first()
+        response = row2dict(student)
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
+    return jsonify(response)
 
 @app.route("/api/student/<uname>/courses")
 def student_courses_route(uname):
-    student = models.Student.query.filter_by(username=uname).first()
-    response = []
-    for course in student.courses:
-        response.append(row2dict(course))
+    try:
+        student = models.Student.query.filter_by(username=uname).first()
+        response = []
+        for course in student.courses:
+            response.append(row2dict(course))
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
     return jsonify(response)
 
 @app.route("/api/student/<uname>/notes")
 def student_notes_route(uname):
-    student = models.Student.query.filter_by(username=uname).first()
-    response = []
-    for note in student.notes:
-        response.append(row2dict(note))
+    try:
+        student = models.Student.query.filter_by(username=uname).first()
+        response = []
+        for note in student.notes:
+            response.append(row2dict(note))
+    except Exception as e:
+        response = dict()
+        response["msg"] = e.message
     return jsonify(response)
 
 @app.teardown_appcontext
