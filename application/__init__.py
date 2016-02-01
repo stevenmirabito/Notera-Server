@@ -179,7 +179,12 @@ def course_notes_route(cid):
         course = models.Course.query.filter_by(id=cid).first()
         response = []
         for note in course.notes:
-            response.append(row2dict(note))
+            note_dict = row2dict(note)
+            author = models.Student.query.filter_by(id=note.student_id).first()
+            author_dict = row2dict(author)
+            author_dict["gravatar"] = author.gravatar()
+            note_dict["author"] = author_dict
+            response.append(note_dict)
     except Exception as e:
         response = dict()
         response["msg"] = e.message
