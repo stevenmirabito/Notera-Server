@@ -22,9 +22,10 @@ class Student(Base):
         secondary=student_course_table,
         back_populates="students")
 
-    def __init__(self, username=None, realname=None):
+    def __init__(self, username=None, realname=None, email=None):
         self.username = username.lower()
         self.realname = realname
+        self.email = email.lower()
 
     def __repr__(self):
         return '<Student %r>' % (self.username)

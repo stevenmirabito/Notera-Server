@@ -54,7 +54,7 @@ def feed_route(uname):
 def new_student_route():
     data = request.get_json(force=True)
     try:
-        student = models.Student(data["username"], data["realname"])
+        student = models.Student(data["username"], data["realname"], data["email"])
         db.add(student)
         db.commit()
         response = row2dict(student)
